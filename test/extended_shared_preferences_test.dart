@@ -59,7 +59,7 @@ void setValuesWithTtlTests() {
     await ExtendedSharedPreferences.init();
     String key = "test";
     List<String> value = ["test", "string", "list"];
-    await ExtendedSharedPreferences.setStringList(key: key, value: value, ttl: const Duration(seconds: 1));
+    await ExtendedSharedPreferences.setStringListWithTTL(key: key, value: value, ttl: const Duration(seconds: 1));
     List<String>? v = await ExtendedSharedPreferences.getStringList(key: key);
     expect(v, value);
     await Future.delayed(const Duration(seconds: 2));
@@ -163,6 +163,29 @@ testEncryptedValues() {
     } on ArgumentError catch (e) {
       expect(e.message, 'Invalid or corrupted pad block');
     }
+  });
+
+  test('Try to set encrypted string list', () async {
+    String encryptionKey = "VerySimple32LengthEncryptionKey=";
+    await ExtendedSharedPreferences.init(encryptionKey: encryptionKey);
+    String key = "test";
+    List<String> value = ["item 0", "item 1", "item 2"];
+    await ExtendedSharedPreferences.setStringListEcrypted(key: key, value: value);
+    List<String>? v = await ExtendedSharedPreferences.getStringListEncrypted(key: key);
+    expect(v, value);
+  });
+
+  test('Try to set encrypted string list with TTL', () async {
+    String encryptionKey = "VerySimple32LengthEncryptionKey=";
+    await ExtendedSharedPreferences.init(encryptionKey: encryptionKey);
+    String key = "test";
+    List<String> value = ["item 0", "item 1", "item 2"];
+    await ExtendedSharedPreferences.setStringListWithTTLEcrypted(key: key, value: value, ttl: const Duration(seconds: 2));
+    List<String>? v = await ExtendedSharedPreferences.getStringListEncrypted(key: key);
+    expect(v, value);
+    await Future.delayed(const Duration(seconds: 2));
+    v = await ExtendedSharedPreferences.getStringListEncrypted(key: key);
+    expect(v, null);
   });
 }
 
