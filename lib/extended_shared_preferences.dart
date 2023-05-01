@@ -16,7 +16,7 @@ class ExtendedSharedPreferences {
   // ================================= //
   // Encrypted values in the store //
   // ================================ //
-  static Future<void> setStringEncrypted(String key, String value) async {
+  static Future<void> setStringEncrypted({required String key, required String value}) async {
     _isPrefsInitialized();
     if (_encryptionKey == null) {
       throw Exception("Encryption key not specify");
@@ -24,7 +24,7 @@ class ExtendedSharedPreferences {
     await prefs!.setString(key, encrypt(key: _encryptionKey!, plainData: value));
   }
 
-  static String? getStringEncrypted(String key) {
+  static String? getStringEncrypted({required String key}) {
     if (_encryptionKey == null) {
       throw Exception("Encryption key not specify");
     }
@@ -36,20 +36,20 @@ class ExtendedSharedPreferences {
     return decrypt(key: _encryptionKey!, encryptedData: value);
   }
 
-  static Future<void> setStringWithTTLEncrypted(String key, String value, Duration ttl) async {
+  static Future<void> setStringWithTTLEncrypted({required String key, required String value, required Duration ttl}) async {
     if (_encryptionKey == null) {
       throw Exception("Encryption key not specify");
     }
-    await setStringWithTTL(key, encrypt(key: _encryptionKey!, plainData: value), ttl);
+    await setStringWithTTL(key: key, value: encrypt(key: _encryptionKey!, plainData: value), ttl: ttl);
   }
 
-  static Future<String?> getStringWithTTLEncrypted(String key) async {
+  static Future<String?> getStringWithTTLEncrypted({required String key}) async {
     _isPrefsInitialized();
     if (_encryptionKey == null) {
       throw Exception("Encryption key not specify");
     }
 
-    String? value = await getString(key);
+    String? value = await getString(key: key);
     if (value == null) {
       return null;
     }
@@ -59,25 +59,25 @@ class ExtendedSharedPreferences {
   // ======================= //
   // Set values in the store //
   // ======================= //
-  static Future<void> setStringWithTTL(String key, String value, Duration ttl) async {
+  static Future<void> setStringWithTTL({required String key, required String value, required Duration ttl}) async {
     _isPrefsInitialized();
     await prefs!.setString(_getPrefixedKey(key), value);
     await prefs!.setInt(_getExpiryKey(key), _getExpiry(ttl).millisecondsSinceEpoch);
   }
 
-  static Future<void> setIntWithTTL(String key, int value, Duration ttl) async {
+  static Future<void> setIntWithTTL({required String key, required int value, required Duration ttl}) async {
     _isPrefsInitialized();
     await prefs!.setInt(_getPrefixedKey(key), value);
     await prefs!.setInt(_getExpiryKey(key), _getExpiry(ttl).millisecondsSinceEpoch);
   }
 
-  static Future<void> setBoolWithTTL(String key, bool value, Duration ttl) async {
+  static Future<void> setBoolWithTTL({required String key, required bool value, required Duration ttl}) async {
     _isPrefsInitialized();
     await prefs!.setBool(_getPrefixedKey(key), value);
     await prefs!.setInt(_getExpiryKey(key), _getExpiry(ttl).millisecondsSinceEpoch);
   }
 
-  static Future<void> setStringList(String key, List<String> value, Duration ttl) async {
+  static Future<void> setStringList({required String key, required List<String> value, required Duration ttl}) async {
     _isPrefsInitialized();
     await prefs!.setStringList(_getPrefixedKey(key), value);
     await prefs!.setInt(_getExpiryKey(key), _getExpiry(ttl).millisecondsSinceEpoch);
@@ -86,32 +86,32 @@ class ExtendedSharedPreferences {
   // ========================== //
   //  Get values from the store //
   // ========================= //
-  static Future<String?> getString(String key) async {
+  static Future<String?> getString({required String key}) async {
     _isPrefsInitialized();
     String? value = prefs!.getString(_getPrefixedKey(key));
     return await _validateExpireAndreturnValue(key, value);
   }
 
-  static Future<int?> getInt(String key) async {
+  static Future<int?> getInt({required String key}) async {
     _isPrefsInitialized();
     int? value = prefs!.getInt(_getPrefixedKey(key));
     return await _validateExpireAndreturnValue(key, value);
   }
 
-  static Future<bool?> getBool(String key) async {
+  static Future<bool?> getBool({required String key}) async {
     _isPrefsInitialized();
     bool? value = prefs!.getBool(_getPrefixedKey(key));
     return await _validateExpireAndreturnValue(key, value);
   }
 
-  static Future<List<String>?> getStringList(String key) async {
+  static Future<List<String>?> getStringList({required String key}) async {
     _isPrefsInitialized();
     List<String>? value = prefs!.getStringList(_getPrefixedKey(key));
     return await _validateExpireAndreturnValue(key, value);
   }
 
   // Remove a key-value pair
-  static Future<void> remove(String key) async {
+  static Future<void> remove({required String key}) async {
     await _removeKeyAndExpiryKey(key);
   }
 
