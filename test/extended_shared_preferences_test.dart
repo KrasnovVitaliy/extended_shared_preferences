@@ -131,7 +131,7 @@ void setValuesWithRegularPref() {
 testEncryptedValues() {
   test('Try to set encrypted value', () async {
     String encryptionKey = "VerySimple32LengthEncryptionKey=";
-    await ExtendedSharedPreferences.init(encriptionKey: encryptionKey);
+    await ExtendedSharedPreferences.init(encryptionKey: encryptionKey);
     String key = "test";
     String value = "value";
     await ExtendedSharedPreferences.setStringEncrypted(key, value);
@@ -139,7 +139,7 @@ testEncryptedValues() {
     expect(v, value);
 
     String incorrectEncryptionKey = "incorrect32LengthEncryptionKey==";
-    await ExtendedSharedPreferences.init(encriptionKey: incorrectEncryptionKey);
+    await ExtendedSharedPreferences.init(encryptionKey: incorrectEncryptionKey);
     try {
       v = ExtendedSharedPreferences.getStringEncrypted(key);
     } on ArgumentError catch (e) {
@@ -149,7 +149,7 @@ testEncryptedValues() {
 
   test('Try to set encrypted value with TTL', () async {
     String encryptionKey = "VerySimple32LengthEncryptionKey=";
-    await ExtendedSharedPreferences.init(encriptionKey: encryptionKey);
+    await ExtendedSharedPreferences.init(encryptionKey: encryptionKey);
     String key = "test";
     String value = "value";
     await ExtendedSharedPreferences.setStringWithTTLEncrypted(key, value, const Duration(seconds: 5));
@@ -157,7 +157,7 @@ testEncryptedValues() {
     expect(v, value);
 
     String incorrectEncryptionKey = "incorrect32LengthEncryptionKey==";
-    await ExtendedSharedPreferences.init(encriptionKey: incorrectEncryptionKey);
+    await ExtendedSharedPreferences.init(encryptionKey: incorrectEncryptionKey);
     try {
       v = await ExtendedSharedPreferences.getStringWithTTLEncrypted(key);
     } on ArgumentError catch (e) {

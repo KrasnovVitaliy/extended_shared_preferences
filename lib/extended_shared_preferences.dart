@@ -5,12 +5,12 @@ import 'package:extended_shared_preferences/cipher.dart';
 
 class ExtendedSharedPreferences {
   static const String _keyPrefix = 'ttl_';
-  static String? _encriptionKey;
+  static String? _encryptionKey;
   static SharedPreferences? prefs;
 
-  static Future<void> init({String? encriptionKey}) async {
+  static Future<void> init({String? encryptionKey}) async {
     prefs = await SharedPreferences.getInstance();
-    _encriptionKey = encriptionKey;
+    _encryptionKey = encryptionKey;
   }
 
   // ================================= //
@@ -18,14 +18,14 @@ class ExtendedSharedPreferences {
   // ================================ //
   static Future<void> setStringEncrypted(String key, String value) async {
     _isPrefsInitialized();
-    if (_encriptionKey == null) {
+    if (_encryptionKey == null) {
       throw Exception("Encryption key not specify");
     }
-    await prefs!.setString(key, encrypt(key: _encriptionKey!, plainData: value));
+    await prefs!.setString(key, encrypt(key: _encryptionKey!, plainData: value));
   }
 
   static String? getStringEncrypted(String key) {
-    if (_encriptionKey == null) {
+    if (_encryptionKey == null) {
       throw Exception("Encryption key not specify");
     }
 
@@ -33,19 +33,19 @@ class ExtendedSharedPreferences {
     if (value == null) {
       return null;
     }
-    return decrypt(key: _encriptionKey!, encryptedData: value);
+    return decrypt(key: _encryptionKey!, encryptedData: value);
   }
 
   static Future<void> setStringWithTTLEncrypted(String key, String value, Duration ttl) async {
-    if (_encriptionKey == null) {
+    if (_encryptionKey == null) {
       throw Exception("Encryption key not specify");
     }
-    await setStringWithTTL(key, encrypt(key: _encriptionKey!, plainData: value), ttl);
+    await setStringWithTTL(key, encrypt(key: _encryptionKey!, plainData: value), ttl);
   }
 
   static Future<String?> getStringWithTTLEncrypted(String key) async {
     _isPrefsInitialized();
-    if (_encriptionKey == null) {
+    if (_encryptionKey == null) {
       throw Exception("Encryption key not specify");
     }
 
@@ -53,7 +53,7 @@ class ExtendedSharedPreferences {
     if (value == null) {
       return null;
     }
-    return decrypt(key: _encriptionKey!, encryptedData: value);
+    return decrypt(key: _encryptionKey!, encryptedData: value);
   }
 
   // ======================= //
