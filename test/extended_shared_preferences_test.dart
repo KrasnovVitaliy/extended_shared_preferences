@@ -189,6 +189,30 @@ testEncryptedValues() {
   });
 }
 
+void keysList() {
+  test('Try to get all keys', () async {
+    await ExtendedSharedPreferences.init();
+    await ExtendedSharedPreferences.prefs!.clear();
+    String key = "test1";
+    String value = "value";
+    await ExtendedSharedPreferences.prefs!.setString("test1", "value1");
+    await ExtendedSharedPreferences.prefs!.setString("test2", "value1");
+    await ExtendedSharedPreferences.prefs!.setString("giga1", "value1");
+    await ExtendedSharedPreferences.setStringWithTTL(key: "test1ttl", value: "value1", ttl: const Duration(seconds: 60));
+    await ExtendedSharedPreferences.setStringWithTTL(key: "test2ttl", value: "value1", ttl: const Duration(seconds: 60));
+    await ExtendedSharedPreferences.setStringWithTTL(key: "giga1ttl", value: "value1", ttl: const Duration(seconds: 60));
+
+    var keys = ExtendedSharedPreferences.getKeys(prefix: "test");
+    expect(keys, ["test1", "test2"]);
+    keys = ExtendedSharedPreferences.getKeys(prefix: "giga");
+    expect(keys, ["giga1"]);
+    keys = ExtendedSharedPreferences.getKeysWithTTL(prefix: "test");
+    expect(keys, ["test1ttl", "test2ttl"]);
+    keys = ExtendedSharedPreferences.getKeysWithTTL(prefix: "giga");
+    expect(keys, ["giga1ttl"]);
+  });
+}
+
 void main() {
   // Need to avoid SharedPreferences preferences exception
   SharedPreferences.setMockInitialValues({});
@@ -197,4 +221,5 @@ void main() {
   removeKeyTests();
   setValuesWithRegularPref();
   testEncryptedValues();
+  keysList();
 }

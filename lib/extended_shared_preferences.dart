@@ -5,6 +5,7 @@ import 'package:extended_shared_preferences/cipher.dart';
 
 class ExtendedSharedPreferences {
   static const String _keyPrefix = 'ttl_';
+  static const String _expirySuffix = '/_expiry';
   static String? _encryptionKey;
   static SharedPreferences? prefs;
 
@@ -170,7 +171,7 @@ class ExtendedSharedPreferences {
   }
 
   static String _getExpiryKey(String key) {
-    return '${_getPrefixedKey(key)}/_expiry'; // Prefix the key with TTL
+    return '${_getPrefixedKey(key)}$_expirySuffix'; // Prefix the key with TTL
   }
 
   static bool _isKeyExpire(String key) {
@@ -205,5 +206,16 @@ class ExtendedSharedPreferences {
       }
     }
     return null;
+  }
+
+  static Iterable<String> getKeys({required String prefix}) {
+    return prefs!.getKeys().where((key) => key.contains(prefix) && !key.contains(_keyPrefix));
+  }
+
+  static Iterable<String> getKeysWithTTL({required String prefix}) {
+    return prefs!
+        .getKeys()
+        .where((key) => key.contains(prefix) && key.contains(_keyPrefix) && !key.contains(_expirySuffix))
+        .map((key) => key.replaceFirst(_keyPrefix, ""));
   }
 }
