@@ -195,8 +195,6 @@ void keysList() {
   test('Try to get all keys', () async {
     await ExtendedSharedPreferences.init();
     await ExtendedSharedPreferences.prefs!.clear();
-    String key = "test1";
-    String value = "value";
     await ExtendedSharedPreferences.prefs!.setString("test1", "value1");
     await ExtendedSharedPreferences.prefs!.setString("test2", "value1");
     await ExtendedSharedPreferences.prefs!.setString("giga1", "value1");
