@@ -171,6 +171,7 @@ testEncryptedValues() {
     String key = "test";
     List<String> value = ["item 0", "item 1", "item 2"];
     await ExtendedSharedPreferences.setStringListEcrypted(key: key, value: value);
+    print("Keys: ${ExtendedSharedPreferences.prefs!.getKeys()}");
     List<String>? v = await ExtendedSharedPreferences.getStringListEncrypted(key: key);
     expect(v, value);
   });
@@ -180,11 +181,12 @@ testEncryptedValues() {
     await ExtendedSharedPreferences.init(encryptionKey: encryptionKey);
     String key = "test";
     List<String> value = ["item 0", "item 1", "item 2"];
-    await ExtendedSharedPreferences.setStringListWithTTLEcrypted(key: key, value: value, ttl: const Duration(seconds: 2));
-    List<String>? v = await ExtendedSharedPreferences.getStringListEncrypted(key: key);
+    await ExtendedSharedPreferences.setStringListWithTTLEcrypted(
+        key: key, value: value, ttl: const Duration(seconds: 2));
+    List<String>? v = await ExtendedSharedPreferences.getStringListWithTTLEncrypted(key: key);
     expect(v, value);
     await Future.delayed(const Duration(seconds: 2));
-    v = await ExtendedSharedPreferences.getStringListEncrypted(key: key);
+    v = await ExtendedSharedPreferences.getStringListWithTTLEncrypted(key: key);
     expect(v, null);
   });
 }
@@ -198,9 +200,12 @@ void keysList() {
     await ExtendedSharedPreferences.prefs!.setString("test1", "value1");
     await ExtendedSharedPreferences.prefs!.setString("test2", "value1");
     await ExtendedSharedPreferences.prefs!.setString("giga1", "value1");
-    await ExtendedSharedPreferences.setStringWithTTL(key: "test1ttl", value: "value1", ttl: const Duration(seconds: 60));
-    await ExtendedSharedPreferences.setStringWithTTL(key: "test2ttl", value: "value1", ttl: const Duration(seconds: 60));
-    await ExtendedSharedPreferences.setStringWithTTL(key: "giga1ttl", value: "value1", ttl: const Duration(seconds: 60));
+    await ExtendedSharedPreferences.setStringWithTTL(
+        key: "test1ttl", value: "value1", ttl: const Duration(seconds: 60));
+    await ExtendedSharedPreferences.setStringWithTTL(
+        key: "test2ttl", value: "value1", ttl: const Duration(seconds: 60));
+    await ExtendedSharedPreferences.setStringWithTTL(
+        key: "giga1ttl", value: "value1", ttl: const Duration(seconds: 60));
 
     var keys = ExtendedSharedPreferences.getKeys(prefix: "test");
     expect(keys, ["test1", "test2"]);

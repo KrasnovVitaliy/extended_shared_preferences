@@ -37,7 +37,8 @@ class ExtendedSharedPreferences {
     return decrypt(key: _encryptionKey!, encryptedData: value);
   }
 
-  static Future<void> setStringWithTTLEncrypted({required String key, required String value, required Duration ttl}) async {
+  static Future<void> setStringWithTTLEncrypted(
+      {required String key, required String value, required Duration ttl}) async {
     if (_encryptionKey == null) {
       throw Exception("Encryption key not specify");
     }
@@ -63,7 +64,7 @@ class ExtendedSharedPreferences {
       throw Exception("Encryption key not specify");
     }
     value = value.map((e) => encrypt(key: _encryptionKey!, plainData: e)).toList();
-    await prefs!.setStringList(_getPrefixedKey(key), value);
+    await prefs!.setStringList(key, value);
   }
 
   static Future<List<String>?> getStringListEncrypted({required String key}) async {
@@ -72,14 +73,16 @@ class ExtendedSharedPreferences {
       throw Exception("Encryption key not specify");
     }
 
-    List<String>? value = await getStringList(key: key);
+    // List<String>? value = await getStringList(key: key);
+    List<String>? value = prefs!.getStringList(key);
     if (value == null) {
       return null;
     }
     return value.map((e) => decrypt(key: _encryptionKey!, encryptedData: e)).toList();
   }
 
-  static Future<void> setStringListWithTTLEcrypted({required String key, required List<String> value, required Duration ttl}) async {
+  static Future<void> setStringListWithTTLEcrypted(
+      {required String key, required List<String> value, required Duration ttl}) async {
     _isPrefsInitialized();
     if (_encryptionKey == null) {
       throw Exception("Encryption key not specify");
@@ -122,7 +125,8 @@ class ExtendedSharedPreferences {
     await prefs!.setInt(_getExpiryKey(key), _getExpiry(ttl).millisecondsSinceEpoch);
   }
 
-  static Future<void> setStringListWithTTL({required String key, required List<String> value, required Duration ttl}) async {
+  static Future<void> setStringListWithTTL(
+      {required String key, required List<String> value, required Duration ttl}) async {
     _isPrefsInitialized();
     await prefs!.setStringList(_getPrefixedKey(key), value);
     await prefs!.setInt(_getExpiryKey(key), _getExpiry(ttl).millisecondsSinceEpoch);
